@@ -27,7 +27,9 @@ Slide.on('update', function(i, si) {
             Puff.draw(1);
         }, 1E3 / FPS);
     }else{
-        canvas.style.display = 'none';
+        if(canvas && canvas.hasOwnProperty("style")) {
+            canvas.style.display = 'none';
+        }
     }
 
 })

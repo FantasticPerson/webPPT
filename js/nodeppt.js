@@ -170,6 +170,9 @@
             Slide.curItem--;
             return;
         }
+        if(curIndex == 0){
+            return;
+        }
         Slide.curItem = 0;
         slideOutCallBack($slides[curIndex]);
         pastIndex = curIndex;
@@ -184,6 +187,9 @@
             return;
         }
         Slide.curItem = 0;
+        if(curIndex == slideCount){
+            return;
+        }
         slideOutCallBack($slides[curIndex]);
         pastIndex = curIndex;
         ++curIndex > slideCount && (curIndex = slideCount);
@@ -361,6 +367,10 @@
         var item = toBuild.item(0);
         list = item.classList;
         list.remove('tobuild');
+        dispatchEvent($curSlide, 'Build', {
+            direction: 'next',
+            cItem: item
+        });
 
         if (list.contains('subSlide')) {
             toArray($('.subSlide.builded', $curSlide)).forEach(function ($item) {
@@ -372,6 +382,8 @@
         return true;
     }
 
+
+
     //单条往后走
     function buildPrevItem(iscontrol) {
         if ($body.classList.contains('overview')) {
@@ -381,7 +393,7 @@
 
         //自定义事件，直接返回
         var event = dispatchEvent($curSlide, 'Build', {
-            direction: 'prev',
+            direction: 'prev22',
             container: $curSlide
         });
         if (event.stopped) {
