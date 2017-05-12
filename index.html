@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>nodeppt markdown</title>
+    <title>南通市加强政府投资建设项目招投标领域廉政风险防控工作情况汇报</title>
     <link rel="stylesheet" media="all" href="./css/nodeppt.css">
     <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="./css/phone.css">
     <link rel="stylesheet" href="./js/highlight/styles/monokai_sublime.css">
@@ -20,14 +20,34 @@
 <body>
 <div class="slides">
     <slides id="container">
-        <slide class="slide">
+        <slide class="slide" id="slide1" p-control="true" controlLength = "5" curtControlIndex="0" data-on-controlnext='onControlNext' data-on-controlpre='onControlPre'>
+            <section class="slide-wrapper">
+                <article class="flexbox vcenter">
+                    <div class="p-control-1 p-control" anim="{zidx:9,name:'bounceInUp',delay:3,duration:2,fun:'ease',count:1}">666</div>
+                    <div class="p-control-2 p-control" anim="{zidx:9,name:'bounceInUp',delay:3,duration:2,fun:'ease',count:1}">666</div>
+                    <div class="p-control-3 p-control" anim="{zidx:9,name:'bounceInUp',delay:3,duration:2,fun:'ease',count:1}">666</div>
+                    <div class="p-control-4 p-control" anim="{zidx:9,name:'bounceInUp',delay:3,duration:2,fun:'ease',count:1}">666</div>
+                    <div class="p-control-5 p-control" anim="{zidx:9,name:'bounceInUp',delay:3,duration:2,fun:'ease',count:1}">666</div>
+                </article>
+            </section>
+        </slide>
+        <slide class="slide" id="slide2" >
             <section class="slide-wrapper">
                 <article class="flexbox vcenter">
                     <video class="video-player" src="./assets/5.ogg" style="position: fixed;width: 1920px;height: 1080px;top: 0;left: 0;"></video>
                 </article>
             </section>
         </slide>
-        <slide class="slide" data-on-leave='onLeavePage1' data-on-enter="onEnterPage1"  data-on-build="onBuild">
+        <slide class="slide"  data-on-leave='onLeavePage1' data-on-enter="onEnterPage1"  data-on-build="onBuild" id="slide3">
+            <section class="slide-wrapper">
+                <article>
+                    <div class="animated" append-style="width: 80px;height: 80px;border-radius: 40px;background-color: yellow" anim="{zidx:9,name:'zoomInDownOutUp',delay:3,duration:2,fun:'ease',count:1}">diyi</div>
+                    <div class="animated" append-style="width: 80px;height: 80px;border-radius: 40px;background-color: yellow" anim="{zidx:9,name:'zoomInOut',delay:3,duration:2,fun:'ease',count:1}">dier</div>
+                    <div class="animated" append-style="width: 80px;height: 80px;border-radius: 40px;background-color: yellow" anim="{zidx:9,name:'zoomInOut',delay:3,duration:2,fun:'ease',count:1}">disan</div>
+                </article>
+            </section>
+        </slide>
+        <slide class="slide" data-on-leave='onLeavePage1' data-on-enter="onEnterPage1"  data-on-build="onBuild" id="slide3">
             <section class="slide-wrapper">
                 <article>
                     <div>
@@ -75,6 +95,8 @@
 <script src="./js/mixjs/lib/event/broadcast.js"></script>
 <script src="./js/nodeppt.js"></script>
 <script>
+    $('[anim]').addClass('animated hidden').removeAttr("style");
+    $('.p-control').addClass('animated hidden').removeAttr("style");
     function onBuild(args){
         if(args.hasOwnProperty('cItem')){
             var item = args.cItem;
@@ -91,8 +113,58 @@
         $(".video-player").height(document.documentElement.clientHeight+'px');
     };
 
+    function onControlNext(args){
+        var curtSlide = args.container;
+        var id = curtSlide.getAttribute('id');
+        var curtControlIndex = curtSlide.getAttribute('curtControlIndex');
+        var controlLength = curtSlide.getAttribute('controlLength');
+        $('#'+id + ' .p-control-'+(Number(curtControlIndex)+1)).each(function(i,e){
+            addAnimate({
+                obj:$(e)
+            },true)
+            var videoArr = e.getElementsByTagName('video');
+            for(var i=0;i<videoArr.length;i++){
+                videoArr[i].play();
+            }
+            if(e.play){
+                e.play();
+            }
+        });
+        curtControlIndex =Number(curtControlIndex) + 1;
+        curtSlide.setAttribute('curtControlIndex',curtControlIndex);
+    }
+
+    function onControlPre(args){
+        var curtSlide = args.container;
+        var id = curtSlide.getAttribute('id');
+        var curtControlIndex = curtSlide.getAttribute('curtControlIndex');
+        var controlLength = curtSlide.getAttribute('controlLength');
+        $('#'+id + ' .p-control-'+(Number(curtControlIndex))).each(function(i,e){
+            $(e).addClass('animated hidden').removeAttr("style");
+
+            var videoArr = e.getElementsByTagName('video');
+            for(var i=0;i<videoArr.length;i++){
+                videoArr[i].pause();
+            }
+            if(e.play){
+                e.pause();
+            }
+//            addAnimate({
+//                obj:$(e)
+//            },true)
+        });
+        curtControlIndex =Number(curtControlIndex) - 1;
+        curtSlide.setAttribute('curtControlIndex',curtControlIndex);
+    }
+
     function onLeaveSlide(args){
-        $('[anim]').addClass('animated hidden').removeAttr("style");
+        if(args.container.getAttribute('p-control')){
+            args.container.setAttribute('curtControlIndex',0);
+        }
+        var id = args.container.getAttribute('id');
+        $('#'+id).find('[anim]').addClass('animated hidden').removeAttr("style");
+//        console.log(args);
+//        $('[anim]').addClass('animated hidden').removeAttr("style");
     }
     function onEnterSlide(args){
         $('slide.current').find('[anim]').each(function(i,e){
@@ -101,11 +173,8 @@
             });
         })
     }
-    function insertHtml(){
 
-    }
-
-    function addAnimate (params){
+    function addAnimate (params,pControl=false){
         var $obj = params.obj,
             po = eval('('+$obj.attr('anim')+')'),
             zidx = po.zidx,                         //z-index

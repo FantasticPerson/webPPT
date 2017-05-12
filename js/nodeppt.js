@@ -165,7 +165,20 @@
 
     //上一页
     function prevSlide(isControl) {
-
+        var $curtSlide = $slides[curIndex];
+        if($curtSlide.getAttribute('p-control')) {
+            if ($curtSlide.getAttribute('curtControlIndex') > 0) {
+                var dataset = $curtSlide.dataset;
+                var cbNames = dataset.incallback || dataset.onControlpre;
+                var cb = getCallbackFuncFromName(cbNames);
+                var event = dispatchEvent('Controlpre', {
+                    container: $slides[curIndex]
+                });
+                //如果有data-incallback那么就执行callback
+                cb && typeof cb === 'function' && proxyFn(cbNames, event);
+                return;
+            }
+        }
         if (buildPrevItem()) {
             Slide.curItem--;
             return;
@@ -182,6 +195,23 @@
 
     //下一页
     function nextSlide(isControl) {
+        // console.log(Slide)
+        // console.log($slides[curIndex]);
+        var $curtSlide = $slides[curIndex];
+        if($curtSlide.getAttribute('p-control')){
+            if($curtSlide.getAttribute('curtControlIndex') < $curtSlide.getAttribute('controlLength')){
+                var dataset = $curtSlide.dataset;
+                var cbNames = dataset.incallback || dataset.onControlnext;
+                var cb = getCallbackFuncFromName(cbNames);
+                var event = dispatchEvent('Controlnext', {
+                    container: $slides[curIndex]
+                });
+                //如果有data-incallback那么就执行callback
+                cb && typeof cb === 'function' && proxyFn(cbNames, event);
+                return;
+            }
+        }
+
         if (buildNextItem()) {
             Slide.curItem++;
             return;
